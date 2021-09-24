@@ -1,8 +1,10 @@
 import axios from "axios";
 import GooglePrediction, { Prediction } from "../types/TPrediction";
 import GooglePlace, { Place } from "./../types/TPlace";
+import { getServer } from "../config";
 
-const BASE_URL = "http://localhost:8081/api/places";
+const SERVER_URL = getServer();
+const BASE_URL = `${SERVER_URL}/api/places`;
 
 const getPlaces = async (search: String): Promise<Prediction[]> => {
   const { data } = await axios.get<GooglePrediction>(
