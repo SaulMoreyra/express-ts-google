@@ -86,7 +86,6 @@ function App() {
 
   const handleOnChagePrediction = useCallback(
     (event: React.SyntheticEvent<Element, Event>, value: Prediction | null) => {
-      console.log(value);
       setSelected(value as Prediction);
       if (value) getPlace(value.place_id as String);
       if (!value) setDirection(DEFAULT_DIRECTION);
