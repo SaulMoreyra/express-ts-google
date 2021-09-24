@@ -1,10 +1,11 @@
 import { useCallback, useState, Fragment, useRef } from "react";
 import { Autocomplete, TextField, Grid } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import { FilterOptionsState } from "@mui/core";
 import { GoogleApi } from "./api";
 import "./App.css";
 import useDebounce from "./hooks/useDebounce";
-import { Prediction, StructuredFormatting } from "./types/TPrediction";
+import { Prediction } from "./types/TPrediction";
 import { Place } from "./types/TPlace";
 
 const MIN_SEARCH_LENGTH = 5;
@@ -39,9 +40,11 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [direction, setDirection] = useState<Direction>(DEFAULT_DIRECTION);
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState<Prediction>({} as Prediction);
+  const [selected, setSelected] = useState<Prediction>({
+    place_id: "",
+  } as Prediction);
   const [open, setOpen] = useState(false);
-  const [place, setPlace] = useState<Place>({} as Place);
+  const [place, setPlace] = useState<Place>();
   const [options, setOptions] = useState<Prediction[]>([]);
 
   const getDirection = useCallback((place: Place): Direction => {
@@ -68,7 +71,6 @@ function App() {
       const place = await GoogleApi.getPlace(placeId);
       setPlace(place);
       const direccionFormated = getDirection(place);
-      console.log(direccionFormated);
       setDirection(direccionFormated);
     },
     [getDirection]
@@ -118,9 +120,7 @@ function App() {
               onOpen={() => setOpen(true)}
               onClose={() => setOpen(false)}
               options={options}
-              isOptionEqualToValue={(option, value) =>
-                value.place_id ? option.place_id === value.place_id : false
-              }
+              filterOptions={(options, state) => options}
               getOptionLabel={(option) => option.description || ""}
               inputValue={search}
               onInputChange={handleOnChangeText}
