@@ -74,14 +74,13 @@ jobs:
           git commit -am "New release version $GITHUB_BUILD_ID"
           git push origin $GITHUB_BRANCH
       - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v3
+        id: open-pr
+        uses: repo-sync/pull-request@v2
         with:
-          token: $GITHUB_TOKEN
-          commit-message: New react build
-          author: $GITHUB_USER_NAME
-          branch: $GITHUB_BRANCH
-          title: 'New react build $GITHUB_BUILD_ID'
+          source_branch: $GITHUB_BRANCH
+          destination_branch: "master" 
+          pr_title: 'New react build $GITHUB_BUILD_ID'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           # reviewers: $GITHUB_REVIEWERS
       - name: Check outputs
         run: |
