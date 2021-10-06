@@ -72,15 +72,12 @@ jobs:
           git checkout -b $GITHUB_BRANCH
           git add .
           git commit -am "New release version $GITHUB_BUILD_ID"
-          git push origin $GITHUB_BRANCH
+          git push -u origin $GITHUB_BRANCH
       - name: Create Pull Request
-        id: open-pr
-        uses: repo-sync/pull-request@v2
-        with:
-          source_branch: $GITHUB_BRANCH
-          destination_branch: "master" 
-          pr_title: 'New react build $GITHUB_BUILD_ID'
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr create --title $PR_TITLE --body $PR_BODY --head $GITHUB_BRANCH --base main
+        env:
+          PR_TITLE: New react build
+          PR_BODY: 'New react build $GITHUB_BUILD_ID'
           # reviewers: $GITHUB_REVIEWERS
       - name: Check outputs
         run: |
