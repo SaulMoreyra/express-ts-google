@@ -27,7 +27,7 @@ export interface Location {
 
 export interface Viewport {
   northeast: Location;
-  southwest: Location;
+  southwest: Location; 
 }
 
 export default GooglePlace;
