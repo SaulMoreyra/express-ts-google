@@ -30,6 +30,11 @@ jobs:
       GITHUB_BUILD_ID: ${{ github.run_number }}
 
     steps:
+      - name: Set environmental variables
+        run: |
+          echo "GITHUB_TARGET_REPOSITORY=$GITHUB_TARGET_REPOSITORY_USER/$GITHUB_TARGET_REPOSITORY_NAME" >> $GITHUB_ENV
+          echo "GITHUB_BRANCH=automatic_deploy_from_"$GITHUB_ORIGIN_REPOSITORY_NAME"_to_"$GITHUB_TARGET_REPOSITORY"_"$GITHUB_BUILD_ID"" >> $GITHUB_ENV
+          
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -44,13 +49,6 @@ jobs:
 
       - name: React Build
         run: npm run build
-
-      - name: Set environmental variables
-        run: |
-          GITHUB_TARGET_REPOSITORY=$GITHUB_TARGET_REPOSITORY_USER/$GITHUB_TARGET_REPOSITORY_NAME
-          GITHUB_BRANCH=automatic_deploy_from_"$GITHUB_ORIGIN_REPOSITORY_NAME"_to_"$GITHUB_TARGET_REPOSITORY"_"$GITHUB_BUILD_ID"
-          echo $GITHUB_TARGET_REPOSITORY >> $GITHUB_ENV
-          echo $GITHUB_BRANCH >> $GITHUB_ENV
 
       - name: Clone Back Repo
         run: |
