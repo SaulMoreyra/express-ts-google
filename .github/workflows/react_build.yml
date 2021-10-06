@@ -29,9 +29,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.TK_GITHUB_ACTION_TOKEN }}
       GITHUB_BUILD_ID: ${{ github.run_number }}
 
-      GITHUB_TARGET_REPOSITORY: $GITHUB_TARGET_REPOSITORY_USER/$GITHUB_TARGET_REPOSITORY_NAME
-      GITHUB_BRANCH: automatic_deploy_from_"$GITHUB_ORIGIN_REPOSITORY_NAME"_to_"$GITHUB_TARGET_REPOSITORY"_"$GITHUB_BUILD_ID"
-
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
@@ -48,10 +45,18 @@ jobs:
       - name: React Build
         run: npm run build
 
+      - name: Set environmental variables
+        run: |
+          GITHUB_TARGET_REPOSITORY=$GITHUB_TARGET_REPOSITORY_USER/$GITHUB_TARGET_REPOSITORY_NAME
+          GITHUB_BRANCH=automatic_deploy_from_"$GITHUB_ORIGIN_REPOSITORY_NAME"_to_"$GITHUB_TARGET_REPOSITORY"_"$GITHUB_BUILD_ID"
+          echo $GITHUB_TARGET_REPOSITORY >> $GITHUB_ENV
+          echo $GITHUB_BRANCH >> $GITHUB_ENV
+
       - name: Clone Back Repo
         run: |
           echo $GITHUB_TARGET_REPOSITORY
           git clone https://user:$GITHUB_TOKEN@github.com/$GITHUB_TARGET_REPOSITORY
+
       - name: Copy Files
         run: |
           echo "Root Files"
@@ -61,6 +66,7 @@ jobs:
           echo Input Path $INPUT
           echo Output Path $OUTPUT
           cp -ra $INPUT/. $OUTPUT
+
       - name: Deploy
         run: |
           cd ./$GITHUB_TARGET_REPOSITORY_NAME
@@ -73,14 +79,14 @@ jobs:
           git add .
           git commit -am "New release version $GITHUB_BUILD_ID"
           git push -u origin $GITHUB_BRANCH
+
       - name: Create Pull Request
         run: |
+          PR_BODY="New react build $GITHUB_BUILD_ID"
+          PR_TITLE="New react build"
           cd ./$GITHUB_TARGET_REPOSITORY_NAME
           gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $GITHUB_BRANCH --base main
-        env: 
-          PR_DESTINY_BRANCH: main
-          PR_BODY: New react build $GITHUB_BUILD_ID
-          PR_TITLE: New react build
+
       - name: Check outputs
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
