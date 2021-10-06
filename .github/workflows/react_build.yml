@@ -29,8 +29,8 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.TK_GITHUB_ACTION_TOKEN }}
       GITHUB_BUILD_ID: ${{ github.run_number }}
 
-      GITHUB_TARGET_REPOSITORY: ${{ GITHUB_TARGET_REPOSITORY_USER }}/${{ GITHUB_TARGET_REPOSITORY_NAME }}
-      GITHUB_BRANCH: automatic_deploy_from_"${{ GITHUB_ORIGIN_REPOSITORY_NAME }}"_to_"${{ GITHUB_TARGET_REPOSITORY }}"_"${{ GITHUB_BUILD_ID }}"
+      GITHUB_TARGET_REPOSITORY: $GITHUB_TARGET_REPOSITORY_USER/$GITHUB_TARGET_REPOSITORY_NAME
+      GITHUB_BRANCH: automatic_deploy_from_"$GITHUB_ORIGIN_REPOSITORY_NAME"_to_"$GITHUB_TARGET_REPOSITORY"_"$GITHUB_BUILD_ID"
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -79,7 +79,7 @@ jobs:
           gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $GITHUB_BRANCH --base main
         env: 
           PR_DESTINY_BRANCH: main
-          PR_BODY: New react build "${{ GITHUB_BUILD_ID }}"
+          PR_BODY: New react build $GITHUB_BUILD_ID
           PR_TITLE: New react build
       - name: Check outputs
         run: |
