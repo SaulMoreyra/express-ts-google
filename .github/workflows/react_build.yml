@@ -79,9 +79,9 @@ jobs:
           echo "gh pr create --title $PR_TITLE --body $PR_BODY --head $PR_BRANCH --base main"
         # gh pr create --title $PR_TITLE --body $PR_BODY --head $GITHUB_BRANCH --base main
         env:
-          PR_BRANCH: ${{GITHUB_BRANCH}}
+          PR_BRANCH: $GITHUB_BRANCH
           PR_TITLE: New react build
-          PR_BODY: New react build ${{GITHUB_BUILD_ID}}
+          PR_BODY: New react build $GITHUB_BUILD_ID
           # reviewers: $GITHUB_REVIEWERS
       - name: Check outputs
         run: |
