@@ -81,7 +81,7 @@ jobs:
           PR_TITLE="New react build"
           cd ./$GITHUB_TARGET_REPOSITORY_NAME
           ls
-        # echo gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $GITHUB_BRANCH --base main
+          echo gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $GITHUB_BRANCH --base main
           gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $GITHUB_BRANCH --base main
       - name: Check outputs
         run: |
