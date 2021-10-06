@@ -75,14 +75,13 @@ jobs:
           git push -u origin $GITHUB_BRANCH
       - name: Create Pull Request
         run: |
-          echo "from $PR_BRANCH to main"
-          echo "gh pr create --title $PR_TITLE --body $PR_BODY --head $PR_BRANCH --base main"
+          PR_BODY="New react build $GITHUB_BUILD_ID"
+          PR_TITLE="New react build"
+          echo $GITHUB_BRANCH
+          echo $PR_BODY
+          echo $PR_TITLE
+          echo gh pr create --title $PR_TITLE --body $PR_BODY --head $GITHUB_BRANCH --base main
         # gh pr create --title $PR_TITLE --body $PR_BODY --head $GITHUB_BRANCH --base main
-        env:
-          PR_BRANCH: $GITHUB_BRANCH
-          PR_TITLE: New react build
-          PR_BODY: New react build $GITHUB_BUILD_ID
-          # reviewers: $GITHUB_REVIEWERS
       - name: Check outputs
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
