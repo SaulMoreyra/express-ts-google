@@ -20,7 +20,7 @@ jobs:
       GITHUB_TARGET_BUNDLE_PATH: src/public/
 
       GITHUB_ORIGIN_REPOSITORY_NAME: ${{ github.repository }}
-      GITHUB_ORIGIN_BUNDLE_PATH: build/
+      GITHUB_ORIGIN_BUNDLE_PATH: build
 
       GITHUB_USER_NAME: SaulMoreyra
       GITHUB_USER_EMAIL: armhacam21@gmail.com
