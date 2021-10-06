@@ -1,0 +1,89 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
+    # Global Envs
+    env:
+      GITHUB_TARGET_REPOSITORY_USER: SaulMoreyra
+      GITHUB_TARGET_REPOSITORY_NAME: back-express-ts-google
+      GITHUB_TARGET_BUNDLE_PATH: src/public/
+
+      GITHUB_ORIGIN_REPOSITORY_NAME: ${{ github.repository }}
+      GITHUB_ORIGIN_BUNDLE_PATH: build/
+
+      GITHUB_USER_NAME: SaulMoreyra
+      GITHUB_USER_EMAIL: armhacam21@gmail.com
+      # GITHUB_REVIEWERS: servandocerna
+
+      GITHUB_TOKEN: ${{ secrets.TK_GITHUB_ACTION_TOKEN }}
+      GITHUB_BUILD_ID: ${{ github.run_number }}
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: React Build
+        run: npm run build
+
+      - name: Clone Back Repo
+        run: |
+          GITHUB_TARGET_REPOSITORY=$GITHUB_TARGET_REPOSITORY_USER/$GITHUB_TARGET_REPOSITORY_NAME
+          echo $GITHUB_TARGET_REPOSITORY
+          git clone https://user:$GITHUB_TOKEN@github.com/$GITHUB_TARGET_REPOSITORY
+      - name: Copy Files
+        run: |
+          echo "Root Files"
+          ls
+          INPUT=./$GITHUB_ORIGIN_BUNDLE_PATH
+          OUTPUT=./$GITHUB_TARGET_REPOSITORY_NAME/$GITHUB_TARGET_BUNDLE_PATH
+          echo Input Path $INPUT
+          echo Output Path $OUTPUT
+          cp -ra $INPUT/. $OUTPUT
+      - name: Deploy
+        run: |
+          GITHUB_TARGET_REPOSITORY=$GITHUB_TARGET_REPOSITORY_USER/$GITHUB_TARGET_REPOSITORY_NAME
+          GITHUB_BRANCH=automatic_deploy_from_"$GITHUB_ORIGIN_REPOSITORY_NAME"_to_"$GITHUB_TARGET_REPOSITORY"_"$GITHUB_BUILD_ID"
+          cd ./$GITHUB_TARGET_REPOSITORY_NAME
+          git config --global user.name "$GITHUB_USER_NAME"
+          git config --global user.email "$GITHUB_USER_EMAIL"
+          echo "Github User"
+          git config user.name
+          git config user.email
+          git checkout -b $GITHUB_BRANCH
+          git add .
+          git commit -am "New release version $GITHUB_BUILD_ID"
+          git push origin $GITHUB_BRANCH
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: $GITHUB_TOKEN
+          commit-message: New react build
+          author: $GITHUB_USER_NAME
+          branch: $GITHUB_BRANCH
+          title: 'New react build $GITHUB_BUILD_ID'
+          # reviewers: $GITHUB_REVIEWERS
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"

@@ -1,7 +1,6 @@
 import { useCallback, useState, Fragment, useRef } from "react";
 import { Autocomplete, TextField, Grid } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import { FilterOptionsState } from "@mui/core";
 import { GoogleApi } from "./api";
 import "./App.css";
 import useDebounce from "./hooks/useDebounce";
