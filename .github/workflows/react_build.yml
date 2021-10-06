@@ -77,10 +77,8 @@ jobs:
         run: |
           PR_BODY="New react build $GITHUB_BUILD_ID"
           PR_TITLE="New react build"
+          GITHUB_TARGET_REPOSITORY=$GITHUB_TARGET_REPOSITORY_USER/$GITHUB_TARGET_REPOSITORY_NAME
           GITHUB_BRANCH=automatic_deploy_from_"$GITHUB_ORIGIN_REPOSITORY_NAME"_to_"$GITHUB_TARGET_REPOSITORY"_"$GITHUB_BUILD_ID"
-          echo $GITHUB_BRANCH
-          echo $PR_BODY
-          echo $PR_TITLE
           echo gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $GITHUB_BRANCH --base main
           gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $GITHUB_BRANCH --base main
       - name: Check outputs
