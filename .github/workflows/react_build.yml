@@ -81,8 +81,8 @@ jobs:
           echo $GITHUB_BRANCH
           echo $PR_BODY
           echo $PR_TITLE
-          echo gh pr create --title $PR_TITLE --body $PR_BODY --head $GITHUB_BRANCH --base main
-          gh pr create --title $PR_TITLE --body $PR_BODY --head $GITHUB_BRANCH --base main
+          echo gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $GITHUB_BRANCH --base main
+          gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $GITHUB_BRANCH --base main
       - name: Check outputs
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"

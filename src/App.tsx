@@ -108,7 +108,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Grid sx={{ width: 300 }} container rowSpacing={1} direction="column">
-          <Grid item>Some text dkdk</Grid>
+          <Grid item>Some text</Grid>
           <Grid item>
             <Autocomplete
               fullWidth
